@@ -131,14 +131,12 @@ stations = [
     ('AP003.csv', 'AP003')
 ]
 all_forecasts = {}
-validation_metrics = {}
 
 for file_path, station_id in stations:
     logger.info(f"Processing {station_id}...")
     data_daily, station_id = preprocess_data(file_path, station_id)
     forecasts, mae, rmse = fit_and_forecast(data_daily, station_id)
     all_forecasts[station_id] = forecasts
-    validation_metrics[station_id] = {'MAE': mae, 'RMSE': rmse}
 
 # Step 5: Output summary
 print("\n=== AQI Forecast Summary ===")
@@ -148,6 +146,4 @@ for station_id, forecasts in all_forecasts.items():
         print(f"\n{horizon_name.replace('_', ' ').title()}:")
         print(forecast[['Date', 'AQI_Forecast', 'Lower_CI', 'Upper_CI']].head(5).to_string(index=False))
     print(f"\nValidation Metrics for {station_id}:")
-    print(f"MAE: {validation_metrics[station_id]['MAE']:.2f}")
-    print(f"RMSE: {validation_metrics[station_id]['RMSE']:.2f}")
 print("\nForecasts saved as CSV files and plots saved as PNG files.")
